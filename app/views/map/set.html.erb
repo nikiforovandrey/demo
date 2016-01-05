@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+
+</head>
+
+<body>
+<div id="googleMap" style="width:600px;height:600px;"></div>
+<button id="checksend">save the point</button>
+<p id='x'></p>
+<p id='y'></p>
+
+<script>
+var map;
+var myCenter=new google.maps.LatLng(24.149126,120.684920);
+var latx=0,
+    laty=0;
+var count=0;
+
+function initialize()
+{
+var mapProp = {
+  center:myCenter,
+  zoom:15,
+  mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+
+  map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+  google.maps.event.addListener(map, 'click', function(event) {
+    placeMarker(event.latLng);
+  });
+}
+
+function placeMarker(location) {
+  count += 1
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map,
+  });
+
+  var infowindow = new google.maps.InfoWindow({
+    content: 'No.' + count
+  });
+  infowindow.open(map,marker);
+
+  latx = location.lat();
+  laty = location.lng();
+
+  $("#x").text(latx);
+  $("#y").text(laty);
+}
+
+$(document).ready(function(){
+  $("#checksend").click(function(){
+    $.post('/map/getxy',
+    {
+      latx:latx,
+      laty:laty
+    }
+    );
+  });
+});
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+</body>
+</html>

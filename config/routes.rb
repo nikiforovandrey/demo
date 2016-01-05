@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root 'map#index'
+  get 'map/set' => 'map#set'
+  post 'map/getxy' => 'map#getxy'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

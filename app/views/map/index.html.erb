@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script
-src="http://maps.googleapis.com/maps/api/js">
-</script>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
 
 <script>
-var latx = 24.149126,
-laty = 120.684920;
-var myCenter=new google.maps.LatLng(latx,laty);
+	var map;
+	var latx = 24.149126;
+	var laty = 120.684920;
+	var myCenter=new google.maps.LatLng(latx,laty);
 
-function initialize()
-{
-var mapProp = {
-  center:myCenter,
-  zoom:15,
-  mapTypeId:google.maps.MapTypeId.ROADMAP
-  };
+	function initialize(){
+		var mapProp = {
+  			center:myCenter,
+  			disableDefaultUI:true,  
+  			zoom:15,
+  			mapTypeId:google.maps.MapTypeId.ROADMAP
+  		};
 
-var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+		map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+		setmapmark();
+	}
 
-var marker=new google.maps.Marker({
-  position:myCenter,
-  });
+	function setmapmark(){
 
-marker.setMap(map);
-}
+		var mapj = JSON.parse('<%= @map.to_json.html_safe %>');
+		var newpoint = new google.maps.LatLng(mapj[0].latx,mapj[0].laty);
 
-google.maps.event.addDomListener(window, 'load', initialize);
+		var marker=new google.maps.Marker({
+			position:newpoint,
+			map:map
+		});
+
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
 </script>
+
 </head>
 
 <body>
-<div id="googleMap" style="width:500px;height:380px;"></div>
+
+<div id="googleMap" style="width:600px;height:600px;"></div>
+
 </body>
 </html>

@@ -1,10 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Demo</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
+	<title>Demo</title>
+	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+	var map;
+	var myCenter=new google.maps.LatLng(24.149126,120.684920);
+	var latx,laty;
+
+	function initialize(){
+		var mapProp = {
+			center:myCenter,
+			disableDefaultUI:true,  
+			zoom:20,
+			mapTypeId:google.maps.MapTypeId.HYBRID,
+		};
+		map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+		var stylesArray = [{"stylers": [{ "visibility": "off" }]}];
+    	map.setOptions({styles: stylesArray});
+  	}
+
+	function mapclicklistener(){
+		google.maps.event.addListener(map, 'click', function(event) {
+			placeMarker(event.latLng);
+		});
+	}
+
+  	function setmapmark(){
+		var mapj = JSON.parse('<%= @map.to_json.html_safe %>');
+		for (var i = 0; i < mapj.length; i++) {
+			var newpoint = new google.maps.LatLng(mapj[i].latx,mapj[i].laty);
+			var marker=new google.maps.Marker({
+				position:newpoint,				
+				map:map
+			});
+		};
+	}
+
+	function placeMarker(location) {
+		var marker = new google.maps.Marker({
+			position: location,
+			animation:google.maps.Animation.BOUNCE,
+			map: map
+		});
+		latx = location.lat();
+		laty = location.lng();
+	}
+
+</script>
+	<%= csrf_meta_tags %>
 </head>
 <body>
 
